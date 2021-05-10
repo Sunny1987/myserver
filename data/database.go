@@ -20,7 +20,7 @@ func DBConnect(l *log.Logger) *mongo.Client {
 	client, err := mongo.Connect(Ctx, clientOption)
 	Client = client
 	if err != nil {
-		l.Printf("Error connecting the database: %v", err)
+		l.Println("Error connecting the database: %v", err)
 		return nil
 	}
 
