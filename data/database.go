@@ -5,6 +5,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/net/context"
 	"log"
+	"os"
 )
 
 // Client declare the database client
@@ -16,7 +17,7 @@ var Ctx = context.TODO()
 // DBConnect Database Connect module
 func DBConnect(l *log.Logger) *mongo.Client {
 	l.Println("********* Trying to connect with MongoDB")
-	clientOption := options.Client().ApplyURI("mongodb://mongo")
+	clientOption := options.Client().ApplyURI(os.Getenv("DB_HOST"))
 	client, err := mongo.Connect(Ctx, clientOption)
 	Client = client
 	if err != nil {
