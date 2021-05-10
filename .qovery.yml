@@ -1,15 +1,17 @@
 ---
 application:
-  name: "myserver"
+  name: "persons"
   project: "sabyapp"
   organization: "QoveryCommunity"
+  publicly_accessible: true
+  port: 8080
 databases:
 - type: "MONGODB"
-  name: "testdb"
+  name: "datastore"
   version: "4.4"
 routers:
-- name: "main-myserver"
+- name: "main-persons"
   routes:
-  - application_name: "myserver"
+  - application_name: "persons"
     paths:
     - "/*"
