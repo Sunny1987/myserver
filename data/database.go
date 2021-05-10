@@ -16,7 +16,7 @@ var Ctx = context.TODO()
 // DBConnect Database Connect module
 func DBConnect(l *log.Logger) *mongo.Client {
 	l.Println("********* Trying to connect with MongoDB")
-	clientOption := options.Client().ApplyURI("mongodb://localhost:27017")
+	clientOption := options.Client().ApplyURI("mongodb://mongo")
 	client, err := mongo.Connect(Ctx, clientOption)
 	Client = client
 	if err != nil {
