@@ -17,7 +17,7 @@ func (p *Persons) GetAllPersons(rw http.ResponseWriter, r *http.Request) {
 	rw.Header().Add("content-type", "application/json")
 
 	//get the database instance
-	collection, ctx := data.GetDB(p.l)
+	collection, ctx := data.GetDB(p.l, "persons")
 
 	//Extract all records
 	cursor, err := collection.Find(ctx, bson.M{})
@@ -59,16 +59,23 @@ func (p *Persons) GetOnePerson(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	//get the database instance
-	collection, ctx := data.GetDB(p.l)
+	collection, ctx := data.GetDB(p.l, "persons")
 	var person data.Person
 
-	//Extract one record
-	err = collection.FindOne(ctx, data.Person{ID: id}).Decode(&person)
+	//set filter record criteria
+	filter := bson.M{"_id": bson.M{"eq": id}}
+
+	//update data
+
+	result, err := collection.UpdateOne(ctx, filter, person)
 	if err != nil {
-		http.Error(rw, "Unable to parse data", http.StatusInternalServerError)
+		http.Error(rw, "Unable to update data", http.StatusBadRequest)
+		p.l.Printf("Unable to update data: %v", err)
 		return
+	} else {
+		p.l.Printf("Updated data: %v", result)
 	}
 
 	//Write the response
-	json.NewEncoder(rw).Encode(person)
+	json.NewEncoder(rw).Encode(result)
 }

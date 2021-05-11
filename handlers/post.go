@@ -14,7 +14,7 @@ func (p *Persons) CreatePOSTForPersons(rw http.ResponseWriter, r *http.Request) 
 	rw.Header().Add("content-type", "application/json")
 
 	//get the database instance
-	collection, ctx := data.GetDB(p.l)
+	collection, ctx := data.GetDB(p.l, "persons")
 
 	//get the person instance context post middleware
 	person := r.Context().Value(KeyPerson{}).(data.Person)

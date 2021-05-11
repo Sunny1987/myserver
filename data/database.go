@@ -36,9 +36,9 @@ func DBConnect(l *log.Logger) *mongo.Client {
 }
 
 // GetDB CreateDB is used to create a database with desired table name
-func GetDB(l *log.Logger) (*mongo.Collection, context.Context) {
+func GetDB(l *log.Logger, col string) (*mongo.Collection, context.Context) {
 	l.Println("********* Trying to create table with MongoDB")
 	l.Printf("Client: %v", Client)
 	l.Printf("Ctx: %v", Ctx)
-	return Client.Database("testDB").Collection("persons"), Ctx
+	return Client.Database("testDB").Collection(col), Ctx
 }
