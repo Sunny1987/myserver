@@ -33,6 +33,10 @@ func main() {
 	getRouter.HandleFunc("/getall", personHandler.GetAllPersons)
 	getRouter.HandleFunc("/getone/{id}", personHandler.GetOnePerson)
 
+	putRouter := serverMux.Methods("PUT").Subrouter()
+	putRouter.HandleFunc("/update/{id}", personHandler.CreatePOSTForPerson)
+	putRouter.Use(personHandler.MiddleWareProductValidation)
+
 	//create server
 	myServer := &http.Server{
 		Addr:         ":8080",
