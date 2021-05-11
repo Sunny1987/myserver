@@ -62,20 +62,13 @@ func (p *Persons) GetOnePerson(rw http.ResponseWriter, r *http.Request) {
 	collection, ctx := data.GetDB(p.l, "persons")
 	var person data.Person
 
-	//set filter record criteria
-	filter := bson.M{"_id": bson.M{"eq": id}}
-
-	//update data
-
-	result, err := collection.UpdateOne(ctx, filter, person)
+	//Extract one record
+	err = collection.FindOne(ctx, data.Person{ID: id}).Decode(&person)
 	if err != nil {
-		http.Error(rw, "Unable to update data", http.StatusBadRequest)
-		p.l.Printf("Unable to update data: %v", err)
+		http.Error(rw, "Unable to parse data", http.StatusInternalServerError)
 		return
-	} else {
-		p.l.Printf("Updated data: %v", result)
 	}
 
 	//Write the response
-	json.NewEncoder(rw).Encode(result)
+	json.NewEncoder(rw).Encode(person)
 }
