@@ -16,7 +16,9 @@ func main() {
 
 	//create standard log
 	l := log.New(os.Stdout, "server", log.LstdFlags)
-	personHandler := handlers.NewPerson(l)
+	//personHandler := handlers.NewPerson(l)
+	//productHandler := handlers.NewProduct(l)
+	commonHandler := handlers.NewCommon(l)
 
 	//create new server mux
 	serverMux := mux.NewRouter()
@@ -26,16 +28,26 @@ func main() {
 
 	//register handlers
 	postRouter := serverMux.Methods("POST").Subrouter()
-	postRouter.HandleFunc("/add", personHandler.CreatePOSTForPersons)
-	postRouter.Use(personHandler.MiddleWareProductValidation)
-
 	getRouter := serverMux.Methods("GET").Subrouter()
-	getRouter.HandleFunc("/getall", personHandler.GetAllPersons)
-	getRouter.HandleFunc("/getone/{id}", personHandler.GetOnePerson)
-
 	putRouter := serverMux.Methods("PUT").Subrouter()
-	putRouter.HandleFunc("/update/{id}", personHandler.CreatePOSTForPerson)
-	putRouter.Use(personHandler.MiddleWareProductValidation)
+
+	//*********************** Person **************************************//
+	postRouter.HandleFunc("/add", commonHandler.Persons.CreatePOSTForPersons)
+	getRouter.HandleFunc("/getall", commonHandler.Persons.GetAllPersons)
+	getRouter.HandleFunc("/getone/{id}", commonHandler.Persons.GetOnePerson)
+	putRouter.HandleFunc("/update/{id}", commonHandler.Persons.CreatePUTForPerson)
+
+	//*********************** Person **************************************//
+
+	//*********************** Product **************************************//
+	postRouter.HandleFunc("/addprod", commonHandler.Products.CreatePOSTForProducts)
+	getRouter.HandleFunc("/getallprod", commonHandler.Products.GetAllProducts)
+	getRouter.HandleFunc("/getoneprod/{id}", commonHandler.Products.GetOneProduct)
+	putRouter.HandleFunc("/updateprod/{id}", commonHandler.Products.CreatePUTForProduct)
+
+	//*********************** Product **************************************//
+	postRouter.Use(commonHandler.Persons.MiddleWareProductValidation)
+	putRouter.Use(commonHandler.Persons.MiddleWareProductValidation)
 
 	//create server
 	myServer := &http.Server{
